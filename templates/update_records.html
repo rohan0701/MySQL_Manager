@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Records</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: #4cd137;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            padding: 30px;
+            gap: 25px;
+        }
+
+        .sidebar {
+            flex: 0 0 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            border-top: 3px solid #44bd32;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2f3640;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .section-description {
+            color: #636e72;
+            margin-bottom: 22px;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background: #44bd32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #4cd137;
+            transform: scale(1.02);
+        }
+
+        .btn-blue {
+            background: #40739e;
+        }
+
+        .btn-blue:hover {
+            background: #273c75;
+        }
+
+        .btn-red {
+            background: #e55039;
+        }
+
+        .btn-red:hover {
+            background: #c44569;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            padding: 8px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table thead {
+            background: #44bd32;
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        table tbody tr:hover {
+            background: #f1f8f1;
+        }
+
+        table td {
+            text-align: center;
+        }
+
+        .input-field {
+            width: 95%;
+            padding: 10px 14px;
+            border: 1px solid #dcdde1;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #44bd32;
+            box-shadow: 0 0 8px rgba(68, 189, 50, 0.25);
+            background: #fff;
+        }
+
+        .input-field:hover {
+            border-color: #b8b8b8;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .db-highlight {
+            color: #44bd32;
+            font-weight: bold;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #44bd32;
+            background-color: #d4edda;
+            color: #155724;
+            text-align: center;
+        }
+
+        .alert.warning {
+            border-left-color: #ffc107;
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .alert.error {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .update-info {
+            background: #e8f4f8;
+            border: 1px solid #bee5eb;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #0c5460;
+        }
+
+        .update-info h4 {
+            margin: 0 0 8px 0;
+            color: #0c5460;
+        }
+
+        .update-info ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2f3640;
+            color: #dcdde1;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #4cd137;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #44bd32;
+        }
+
+        .row-counter {
+            background: linear-gradient(135deg, #40739e, #487eb0);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 10px;
+            box-shadow: 0 2px 4px rgba(64, 115, 158, 0.2);
+        }
+
+        .delete-column {
+            width: 100px;
+            text-align: center;
+        }
+
+        .action-column {
+            width: 80px;
+        }
+
+        .delete-form {
+            display: inline-block;
+            margin: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">MySQL Manager</div>
+    </nav>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="alert warning">
+                <strong>Update Mode:</strong> Modify existing records in table <span class="db-highlight">{{ table_name }}</span>
+            </div>
+
+            <div class="update-info section">
+                <h4>📝 Instructions:</h4>
+                <ul>
+                    <li>Edit the values in the input fields below.</li>
+                    <li>Leave fields unchanged if you don't want to modify them.</li>
+                    <li><strong>Note:</strong> The primary key column (<span class="db-highlight">{{ pk_col }}</span>) cannot be modified.</li>
+                    <li>Click "🗑️ Delete" to permanently delete individual records.</li>
+                    <li>Click "Save Changes" to update all modified records.</li>
+                </ul>
+            </div>
+        </aside>
+
+        <div class="content">
+            <div class="section">
+                <div class="section-title">Update Records in <span class="db-highlight">{{ table_name }}</span></div>
+                <p class="section-description">Modify the existing data in your table. All changes will be saved when you click the save button.</p>
+
+                {% load custom_filters %}
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="action-column">Action</th>
+                                <th style="width: 80px;">Row #</th>
+                                {% for col in table_columns %}
+                                    <th>{{ col }} {% if col == pk_col %}🔑{% endif %}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_data %}
+                                {% with row_index=forloop.counter0 %}
+                                <tr id="row_{{ row_index }}">
+                                    <!-- Delete form: now standalone -->
+                                    <td class="delete-column">
+                                        <form method="post" action="/delete_record/" class="delete-form"
+                                              onsubmit="return confirm('Are you sure you want to delete this record? This action cannot be undone.');">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="table_name" value="{{ table_name }}">
+                                            {% if pk_col %}
+                                                <input type="hidden" name="pk_value" value="{{ row|lookup:pk_col|default_if_none:'' }}">
+                                                <input type="hidden" name="pk_col" value="{{ pk_col }}">
+                                            {% else %}
+                                                {% for col in table_columns %}
+                                                    <input type="hidden" name="col_{{ col }}" value="{{ row|lookup:col|default_if_none:'NULL' }}">
+                                                {% endfor %}
+                                            {% endif %}
+                                            <button type="submit" class="btn btn-delete" title="Delete this record">🗑️ Delete</button>
+                                        </form>
+                                    </td>
+
+                                    <!-- Update form fields -->
+                                    <form method="post" action="/update_records/" id="updateForm_{{ row_index }}">
+                                        {% csrf_token %}
+                                        <td><span class="row-counter">{{ forloop.counter }}</span></td>
+
+                                        <input type="hidden" name="row_indices" value="{{ row_index }}">
+                                        {% if pk_col %}
+                                            <input type="hidden" name="original_row_{{ row_index }}_pk" value="{{ row|lookup:pk_col|default_if_none:'' }}">
+                                        {% else %}
+                                            {% for col in table_columns %}
+                                                <input type="hidden" name="original_row_{{ row_index }}_{{ col }}" value="{{ row|lookup:col|default_if_none:'' }}">
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        {% for col in table_columns %}
+                                            <input type="hidden" name="row_{{ row_index }}_columns" value="{{ col }}">
+                                            <td>
+                                                <input type="text"
+                                                       class="input-field"
+                                                       name="row_{{ row_index }}_{{ col }}"
+                                                       value="{{ row|lookup:col|default_if_none:'' }}"
+                                                       placeholder="Enter {{ col }}"
+                                                       id="input_{{ row_index }}_{{ col }}"
+                                                       {% if col == pk_col %}readonly style="background-color: #e9ecef;" title="Primary key - cannot be modified"{% endif %}>
+                                            </td>
+                                        {% endfor %}
+                                    </form>
+                                </tr>
+                                {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Save / Reset buttons -->
+                <div class="btn-group">
+                    <button type="submit" form="updateForm_0" class="btn">💾 Save Changes</button>
+                    <a href="/show_tables/" class="btn btn-blue">Go Back</a>
+                    <button type="reset" form="updateForm_0" class="btn btn-red">Reset Form</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 MySQL Manager | <a href="https://www.linkedin.com/in/aniketgavali">Aniket Gavali</a></p>
+        <p>Made with ❤️ for database enthusiasts</p>
+    </footer>
+
+</body>
+</html>

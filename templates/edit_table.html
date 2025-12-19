@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Operations - {{ table }}</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #273c75;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .container {
+            flex: 1;
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+            width: 100%;
+        }
+
+        .section {
+            background: #fff;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2f3640;
+            margin-bottom: 10px;
+        }
+
+        .section-description {
+            color: #636e72;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .breadcrumb {
+            background: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: #44bd32;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .db-highlight {
+            color: #44bd32;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background: #44bd32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #4cd137;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+
+        .btn-blue {
+            background: #40739e;
+        }
+
+        .btn-blue:hover {
+            background: #273c75;
+        }
+
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: 1px solid #dcdde1;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            color: #636e72;
+        }
+
+        .tab-btn.active {
+            background: #fff;
+            color: #2f3640;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            background: #fff;
+            border: 1px solid #dcdde1;
+            border-radius: 0 8px 8px 8px;
+            padding: 0;
+        }
+
+        .operation-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #2f3640;
+            font-size: 14px;
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #44bd32;
+            box-shadow: 0 0 0 3px rgba(68, 189, 50, 0.1);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2f3640;
+            color: #dcdde1;
+            font-size: 14px;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #4cd137;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #44bd32;
+            transform: scale(1.05);
+        }
+
+        footer::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, #74ebd5, #ACB6E5);
+            transition: left 0.6s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        Table Operations - {{ table }}
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">Home</a> > <a href="/show_tables/">Tables</a> > <strong class="db-highlight">{{ table }}</strong> > Operations
+        </div>
+
+        <!-- Tab Container -->
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="showTab('insert')">Insert Records</button>
+                <button class="tab-btn" onclick="showTab('update')">Update Table</button>
+                
+            </div>
+
+            <div class="tab-content">
+                <!-- Insert Records Tab -->
+                <div id="insert-tab" class="section" style="margin: 0; border-radius: 0;">
+                    <div class="section-title">Insert Records into <span class="db-highlight">{{ table }}</span></div>
+                    <div class="section-description">
+                        Add new records to your table. You can specify how many records you want to insert at once.
+                    </div>
+
+                    <form class="operation-form" action="/insert/" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="form-label" for="record-count">Number of Records to Insert:</label>
+                            <input type="number" id="record-count" name="records" class="form-input" value="1" min="1"max="100" placeholder="Enter number of records">
+                        </div>
+                        <div>
+                            <button type="submit" class="btn">Insert Records</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="update-tab" class="section" style="margin: 0; border-radius: 0; display: none;">
+                    <div class="section-title">Update Table <span class="db-highlight">{{ table }}</span></div>
+                    <div class="section-description">
+                        Modify existing records in your table. You can update specific records based on conditions.
+                    </div>
+
+                    <form class="operation-form" action="/update_records/" method="get">
+                        <div>
+                            <button type="submit" class="btn btn-warning">Update Records</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <a href="/show_tables/" class="btn btn-blue">← Back to Tables</a>
+            <a href="/show_tables/" class="btn btn-blue">View Table Data</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 MySQL Manager | <a href="https://www.linkedin.com/in/aniketgavali">Aniket Gavali</a></p>
+        <p>Made with ❤️ for database enthusiasts</p>
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.getElementById('insert-tab').style.display = 'none';
+            document.getElementById('update-tab').style.display = 'none';
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Table Operations page loaded successfully');
+        });
+    </script>
+</body>
+
+</html>

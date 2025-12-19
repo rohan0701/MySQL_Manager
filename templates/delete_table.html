@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Table</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            color: #2f3640;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #4cd137;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+        /* Main content */
+        .main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .delete-container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .delete-container h2 {
+            margin-bottom: 25px;
+            color: #2f3640;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        /* Form styling */
+        .delete-form {
+            margin-bottom: 25px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: #4cd137;
+            box-shadow: 0 0 0 3px rgba(76, 209, 55, 0.1);
+        }
+
+        /* Button styles */
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            min-width: 140px;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-blue {
+            background: #3498db;
+        }
+
+        .btn-blue:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Message styling */
+        .message {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            background: rgba(76, 209, 55, 0.1);
+            color: #27ae60;
+            border: 1px solid rgba(76, 209, 55, 0.3);
+        }
+
+        /* Back button container */
+        .back-button-container {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(47, 54, 64, 0.1);
+        }
+
+        /* Warning icon */
+        .warning-icon {
+            font-size: 48px;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2f3640;
+            color: #dcdde1;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #4cd137;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #44bd32;
+            transform: scale(1.05);
+        }
+
+        footer::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, #74ebd5, #ACB6E5);
+            transition: left 0.6s ease;
+        }
+
+        footer:hover::before {
+            left: 0;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-logo">MySQL Manager</div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="main">
+        <div class="delete-container">
+            <div class="warning-icon">⚠️</div>
+            <h2>Delete Table</h2>
+            
+            <form method="POST" class="delete-form">
+                {% csrf_token %}
+                <input type="text" name="deltable" placeholder="Enter table name to delete" class="input-box" required>
+                <button type="submit" class="btn btn-delete">Delete Table</button>
+            </form>
+
+            <!-- Show message below the form -->
+            {% if message %}
+            <div class="message">{{ message }}</div>
+            {% endif %}
+
+            <div class="back-button-container">
+                <a href="http://127.0.0.1:8000/show_tables/" class="btn btn-blue">Back to Work Area</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 MySQL Manager | <a href="https://www.linkedin.com/in/aniketgavali">Aniket Gavali</a></p>
+        <p>Made with ❤️ for database enthusiasts</p>
+    </footer>
+</body>
+
+</html>

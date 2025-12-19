@@ -1,0 +1,356 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table View - {{ table_name }}</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #273c75;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .container {
+            flex: 1;
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+            width: 100%;
+        }
+
+        .section {
+            background: #fff;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2f3640;
+            margin-bottom: 10px;
+        }
+
+        .section-description {
+            color: #636e72;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background: #44bd32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #4cd137;
+        }
+
+        .btn-blue {
+            background: #40739e;
+        }
+
+        .btn-blue:hover {
+            background: #273c75;
+        }
+
+        .db-highlight {
+            color: #44bd32;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            word-wrap: break-word;
+            max-width: 200px;
+        }
+
+        table thead {
+            background: #44bd32;
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #44bd32;
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert.error {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .breadcrumb {
+            background: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: #44bd32;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: 1px solid #dcdde1;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            color: #636e72;
+        }
+
+        .tab-btn.active {
+            background: #fff;
+            color: #2f3640;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            background: #fff;
+            border: 1px solid #dcdde1;
+            border-radius: 0 8px 8px 8px;
+            padding: 0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2f3640;
+            color: #dcdde1;
+            font-size: 14px;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #4cd137;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #44bd32;
+            transform: scale(1.05);
+        }
+
+        footer::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, #74ebd5, #ACB6E5);
+            transition: left 0.6s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">Table View - {{ table_name }}</div>
+    
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+            <a href="/show_tables/">Work Area</a> > <span class="db-highlight">{{ selected_db }}</span> > <strong>{{ table_name }}</strong>
+        </div>
+        
+        <!-- Error Messages -->
+        {% if error %}
+        <div class="alert error">
+            <strong>Error:</strong> {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if table_name %}
+        <!-- Tab Container -->
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="showTab('structure')">Table Structure</button>
+                <button class="tab-btn" onclick="showTab('data')">Table Data</button>
+            </div>
+            <div class="tab-content">
+                <!-- Table Structure Tab -->
+                <div id="structure-tab" class="section" style="margin: 0; border-radius: 0;">
+                    <div class="section-title">Structure of <span class="db-highlight">{{ table_name }}</span></div>
+                    {% if table_structure %}
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Null</th>
+                                    <th>Key</th>
+                                    <th>Default</th>
+                                    <th>Extra</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for field in table_structure %}
+                                <tr>
+                                    <td><strong>{{ field.field }}</strong></td>
+                                    <td>{{ field.type }}</td>
+                                    <td>{{ field.null }}</td>
+                                    <td>{{ field.key }}</td>
+                                    <td>{{ field.default }}</td>
+                                    <td>{{ field.extra }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p style="text-align: center; color: #636e72; font-style: italic;">No structure information available</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Table Data Tab -->
+                <div id="data-tab" class="section" style="margin: 0; border-radius: 0; display: none;">
+                    <div class="section-title">Data in <span class="db-highlight">{{ table_name }}</span></div>
+                    <p class="section-description">Showing first 100 rows</p>
+                    {% if table_data %}
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    {% for column in table_columns %}
+                                    <th>{{ column }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in table_data %}
+                                <tr>
+                                    {% for column in table_columns %}
+                                    <td>{{ row|lookup:column }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p style="text-align: center; color: #636e72; font-style: italic;">No data found in this table</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Button Container with Left and Right Alignment -->
+        <div class="button-container">
+            <a href="http://127.0.0.1:8000/show_tables/" class="btn btn-blue">← Back to Work Area</a>
+            <a href="http://127.0.0.1:8000/edit_table/" class="btn">Edit Table</a>
+        </div>
+        {% endif %}
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 MySQL Manager | <a href="https://www.linkedin.com/in/aniketgavali">Aniket Gavali</a></p>
+        <p>Made with ❤️ for database enthusiasts</p>
+    </footer>
+    
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.getElementById('structure-tab').style.display = 'none';
+            document.getElementById('data-tab').style.display = 'none';
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

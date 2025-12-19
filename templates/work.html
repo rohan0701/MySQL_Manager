@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Area</title>
+    <style>
+        /* 🔹 Sticky footer fix */
+        html,
+        body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            flex: 1;
+            /* Pushes footer to bottom */
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .navbar {
+            background: #4cd137;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            display: inline;
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -3px;
+            left: 0;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #e1f5fe;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* 🔹 New grid layout for top sections */
+        .top-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 🔹 Full-width section for tables */
+        .section.full-width {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2f3640;
+            margin-bottom: 10px;
+        }
+
+        .section-description {
+            color: #636e72;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .input-box {
+            padding: 12px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 250px;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: #44bd32;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background: #44bd32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #4cd137;
+        }
+
+        .btn-blue {
+            background: #40739e;
+        }
+
+        .btn-blue:hover {
+            background: #273c75;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .db-highlight {
+            color: #44bd32;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+
+        table th,
+        table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table thead {
+            background: #44bd32;
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2f3640;
+            color: #dcdde1;
+            font-size: 14px;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #4cd137;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #44bd32;
+            transform: scale(1.05);
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #44bd32;
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert.error {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #636e72;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">MySQL Manager</div>
+        <ul class="nav-links">
+            <li><a href="http://127.0.0.1:8000/home/">Home</a></li>
+            <li><a href="http://127.0.0.1:8000/explore/">Databases</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+
+        <!-- Error/Success Messages -->
+        {% if error %}
+        <div class="alert error">
+            <strong>Error:</strong> {{ error }}
+        </div>
+        {% endif %}
+
+        {% if selected_db %}
+        <div class="alert">
+            <strong>Success:</strong> Connected to database "{{ selected_db }}"
+        </div>
+        {% endif %}
+
+        <!-- 🔹 Top sections in grid layout -->
+        <div class="top-sections">
+            <!-- Create Database Section (Left) -->
+            <div class="section">
+                <div class="section-title">Create New Database</div>
+                <p class="section-description">Create a new database for your project.</p>
+                <form action="http://127.0.0.1:8000/explore/" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-blue">Create New Database</button>
+                </form>
+            </div>
+
+            <!-- Select Database Section (Right) -->
+            <div class="section">
+                <div class="section-title">Select Database</div>
+                <p class="section-description">Enter the name of an existing database to connect.</p>
+                <form action="/select_db/" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" name="db_name" placeholder="Enter database name" class="input-box" required>
+                        <button type="submit" class="btn">Connect</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Show Tables Section (Full width below) -->
+        {% if selected_db %}
+        <div class="section full-width">
+            <div class="section-title">Tables in <span class="db-highlight">{{ selected_db }}</span></div>
+            <p class="section-description">Manage and explore your database tables.</p>
+
+            <div class="btn-group">
+                <form action="/show_tables/" method="post" style="display: inline-block;">
+                    {% csrf_token %}
+                    <input type="hidden" name="db_name" value="{{ selected_db }}">
+                    <button type="submit" class="btn">Show Tables</button>
+                </form>
+
+                <form action="http://127.0.0.1:8000/create_table/" method="get" style="display: inline-block;">
+                    <button type="submit" class="btn">Create New Table</button>
+                </form>
+
+                <form action="http://127.0.0.1:8000/delete_table/" method="get" style="display: inline-block;">
+                    <button type="submit" class="btn">Delete Table</button>
+                </form>
+
+            </div>
+
+            {% if tables %}
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Table Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for table in tables %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ table }}</td>
+                            <td>
+                                <form action="/view_table/" method="post" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="table_name" value="{{ table }}">
+                                    <button type="submit" class="btn"
+                                        style="padding: 6px 12px; font-size: 12px;">View</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div style="text-align: center; color: #636e72; font-style: italic; margin-top: 20px;">
+                Click "Show Tables" to view tables in this database
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 MySQL Manager | <a href="https://www.linkedin.com/in/aniketgavali">Aniket Gavali</a></p>
+        <p>Made with ❤️ for database enthusiasts</p>
+    </footer>
+
+</body>
+
+</html>

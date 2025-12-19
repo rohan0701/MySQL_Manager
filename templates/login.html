@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MySQL_Login</title>
+    <style>
+        /* Body as flex container to stick footer at bottom */
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            color: #2f3640;
+        }
+
+        /* Main content grows to fill space */
+        form {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Login box styling */
+        .login {
+            background-color: #ffffff;
+            width: 350px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-8px); }
+            100% { transform: translateX(0); }
+        }
+
+        .error {
+            color: #ff6b6b;
+            margin-top: 10px;
+        }
+
+        .field-error {
+            color: #e67e22;
+            margin-top: 10px;
+        }
+
+        .login h2 {
+            margin-bottom: 20px;
+            color: #2f3640;
+        }
+
+        .login input[type="password"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #dcdde1;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .login input[type="submit"] {
+            width: 85%;
+            padding: 10px;
+            background-color: #4cd137;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login input[type="submit"]:hover {
+            background-color: #44bd32;
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2f3640;
+            color: #dcdde1;
+            font-size: 14px;
+            position: relative;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #4cd137;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #44bd32;
+            transform: scale(1.05);
+        }
+
+        /* Animated line on footer hover */
+        footer::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, #74ebd5, #ACB6E5);
+            transition: left 0.6s ease;
+        }
+
+        footer:hover::before {
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <form method="post" id="loginForm" novalidate>
+        {% csrf_token %}
+        <div class="login {% if error %}shake{% endif %}" id="loginBox">
+            <h2>Connect To MySQL</h2>
+            <label for="p">Enter Password Of System To Connect:</label><br>
+            <input type="password" name="p" id="p" autocomplete="current-password" placeholder="Password"><br><br>
+
+            <input type="submit" value="Connect">
+
+            {% if field_error %}
+                <p class="field-error">{{ field_error }}</p>
+            {% endif %}
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+        </div>
+    </form>
+
+    <script>
+        const loginForm = document.getElementById("loginForm");
+        const loginBox = document.getElementById("loginBox");
+
+        loginForm.addEventListener("submit", function (e) {
+            let pwd = document.getElementById("p").value.trim();
+            if (!pwd) {
+                e.preventDefault();
+                let msg = document.querySelector(".field-error");
+                if (!msg) {
+                    let warn = document.createElement("p");
+                    warn.className = "field-error";
+                    warn.innerText = "Password is required.";
+                    loginBox.appendChild(warn);
+                }
+            }
+        });
+    </script>
+
+    <footer>
+        <p>&copy; 2025 MySQL Manager | <a href="https://www.linkedin.com/in/aniketgavali">Aniket Gavali</a></p>
+        <p>Made with ❤️ for database enthusiasts</p>
+    </footer>
+</body>
+
+</html>

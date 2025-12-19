@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MySQL Manager</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      color: #2f3640;
+
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #4cd137;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .nav-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background: #fff;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: #e1f5fe;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin: 60px auto 40px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 15px;
+      color: #2f3640;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #555;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Cards Container */
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+
+    .card {
+      background: #fff;
+      width: 300px;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .card img {
+      width: 60px;
+      margin-bottom: 15px;
+    }
+
+    .card h2 {
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .card-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #4cd137;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .card-btn:hover {
+      background: #44bd32;
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    footer {    
+      text-align: center;
+      padding: 20px;
+      background: #2f3640;
+      color: #dcdde1;
+      font-size: 14px;
+      margin-top: auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    footer p {
+      margin: 5px 0;
+    }
+
+    footer a {
+      color: #4cd137;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #44bd32;
+      transform: scale(1.05);
+    }
+
+
+    /* Animated line on footer hover */
+    footer::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      top: 0;
+      left: -100%;
+      background: linear-gradient(90deg, #74ebd5, #ACB6E5);
+      transition: left 0.6s ease;
+    }
+
+    footer:hover::before {
+      left: 0;
+    }
+    /* Landing animations */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animate hero */
+.hero {
+  opacity: 0;
+  animation: fadeInUp 1s forwards;
+  animation-delay: 0.2s;
+}
+
+/* Animate cards container */
+.cards-container {
+  opacity: 0;
+  animation: fadeInUp 0.3s forwards;
+  animation-delay: 0.3s;
+}
+
+/* Animate each card with a stagger */
+.card {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s forwards;
+}
+
+.card:nth-child(1) { animation-delay: 0.8s; }
+.card:nth-child(2) { animation-delay: 1s; }
+/* Add more nth-child rules if you have more cards */
+.navbar {
+  opacity: 0;
+  animation: fadeInUp 0.8s forwards;
+  animation-delay: 0s;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-logo">MySQL Manager</div>
+    <ul class="nav-links">
+      <a href="https://www.mysql.com/">About MySQL</a>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <h1>Welcome to MySQL Manager</h1>
+    <p>Manage your MySQL databases easily — explore tables, insert data, update records, and more, all from a simple web interface.</p>
+  </header>
+
+  <!-- Action Cards -->
+  <div class="cards-container">
+    <div class="card">
+      <h2>Explore Database</h2>
+      <p>View all your databases and tables. Quickly see the structure and contents.</p>
+      <a href="http://127.0.0.1:8000/explore/" class="card-btn">Explore</a>
+    </div>
+
+    <div class="card">
+      <h2>Work With Database</h2>
+      <p>Create tables, insert records, update data, and delete entries with ease.</p>
+      <a href="http://127.0.0.1:8000/work/" class="card-btn">Start Working</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 MySQL Manager | <a href="https://www.linkedin.com/in/aniketgavali">Aniket Gavali</a></p>
+    <p>Made with ❤️ for database enthusiasts</p>
+  </footer>
+</body>
+</html>

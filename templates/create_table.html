@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Dynamic Table</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f6fa 0%, #e9ecef 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #4cd137 0%, #44bd32 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            flex: 1;
+            padding: 30px 20px 50px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+        }
+
+        .form-container {
+            background: #fff;
+            margin-top: 20px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            width: 100%;
+            max-width: 700px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2f3640;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .section-description {
+            color: #636e72;
+            margin-bottom: 30px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .db-highlight {
+            color: #44bd32;
+            font-weight: bold;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        form > label {
+            font-weight: 600;
+            color: #2f3640;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        form > input[type="text"],
+        form > input[type="number"] {
+            padding: 14px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        form > input[type="text"]:focus,
+        form > input[type="number"]:focus {
+            outline: none;
+            border-color: #44bd32;
+            box-shadow: 0 0 0 3px rgba(68, 189, 50, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .field-group {
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f1f3f4 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .field-group::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #44bd32 0%, #4cd137 100%);
+        }
+
+        .field-group:hover {
+            border-color: #44bd32;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(68, 189, 50, 0.15);
+        }
+
+        .field-group-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2f3640;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .field-number {
+            background: linear-gradient(135deg, #44bd32 0%, #4cd137 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: bold;
+            min-width: 35px;
+            height: 35px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(68, 189, 50, 0.3);
+        }
+
+        .field-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .field-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .field-row label {
+            flex: 1;
+            margin: 0;
+            font-weight: 600;
+            color: #2f3640;
+            font-size: 14px;
+        }
+
+        .field-row input,
+        .field-row select {
+            flex: 2;
+            padding: 12px 14px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .field-row input:focus,
+        .field-row select:focus {
+            outline: none;
+            border-color: #44bd32;
+            box-shadow: 0 0 0 3px rgba(68, 189, 50, 0.1);
+        }
+
+        .field-row input:hover,
+        .field-row select:hover {
+            border-color: #bdc3c7;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #44bd32 0%, #4cd137 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(68, 189, 50, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #4cd137 0%, #44bd32 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(68, 189, 50, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(68, 189, 50, 0.3);
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, #40739e 0%, #487eb0 100%);
+            box-shadow: 0 4px 15px rgba(64, 115, 158, 0.3);
+        }
+
+        .btn-blue:hover {
+            background: linear-gradient(135deg, #487eb0 0%, #40739e 100%);
+            box-shadow: 0 6px 20px rgba(64, 115, 158, 0.4);
+        }
+
+        .back-button-container {
+            margin-top: 30px;
+            margin-right: 450px;
+            width: 90%;
+            display: inline;
+            padding-right: 30px;
+            max-width: 250px;
+        }
+
+        /* Fixed Footer Styles */
+        footer {
+            background: linear-gradient(135deg, #2f3640 0%, #353b48 100%);
+            color: #dcdde1;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            border-top: 3px solid #44bd32;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #74ebd5, #ACB6E5, #4cd137);
+            transition: left 0.8s ease;
+        }
+
+        footer:hover::before {
+            left: 0;
+        }
+
+        footer p {
+            margin: 8px 0;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        footer p:first-child {
+            font-weight: 600;
+        }
+
+        footer p:last-child {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        footer a {
+            color: #4cd137;
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        footer a:hover {
+            color: #fff;
+            background: rgba(76, 209, 55, 0.2);
+            transform: scale(1.05);
+        }
+
+        footer a::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 50%;
+            background: #4cd137;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        footer a:hover::after {
+            width: 100%;
+        }
+
+        /* Loading Animation for Dynamic Content */
+        #fieldsContainer {
+            transition: all 0.3s ease;
+        }
+
+        .field-group {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Enhanced Focus Styles */
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #44bd32 !important;
+            box-shadow: 0 0 0 3px rgba(68, 189, 50, 0.1) !important;
+        }
+
+        /* Improved Placeholder Styles */
+        input::placeholder {
+            color: #95a5a6;
+            opacity: 1;
+        }
+
+        /* Better Select Arrow */
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+    
+    </style>
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <nav class="navbar">
+            <div class="nav-logo">MySQL Manager</div>
+        </nav>
+
+        <div class="container">
+            <div class="form-container">
+                <div class="section-title">Create New Table</div>
+                <p class="section-description">Design and create a new table structure for your <span
+                        class="db-highlight">database</span>.</p>
+
+                <form action="/create_table/" method="post">
+                    <!-- Django CSRF token placeholder -->
+                    {% csrf_token %}
+
+                    <label>Table Name</label>
+                    <input type="text" name="tableName" placeholder="Enter Table Name .." required>
+
+                    <label>How many Fields You Want?</label>
+                    <input type="number" id="fieldCount" name="fieldCount" min="1"
+                        placeholder="Enter number of fields" required>
+
+                    <div id="fieldsContainer"></div>
+
+                    <input type="submit" value="Create Table" class="btn">
+                </form>
+            </div>
+            
+            <div class="back-button-container">
+                <a href="http://127.0.0.1:8000/show_tables/" class="btn btn-blue">Back to Work Area</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 MySQL Manager | <a href="https://www.linkedin.com/in/aniketgavali">Aniket Gavali</a></p>
+        <p>Made with ❤️ for database enthusiasts</p>
+    </footer>
+
+    <script>
+        const fieldCountInput = document.getElementById("fieldCount");
+        const fieldsContainer = document.getElementById("fieldsContainer");
+
+        fieldCountInput.addEventListener("input", () => {
+            const count = parseInt(fieldCountInput.value) || 0;
+            fieldsContainer.innerHTML = "";
+
+            for (let i = 1; i <= count; i++) {
+                const group = document.createElement("div");
+                group.className = "field-group";
+
+                group.innerHTML = `
+          <div class="field-group-title">
+            <span class="field-number">${i}</span>
+            Field ${i} Configuration
+          </div>
+          <div class="field-row">
+            <label>Field ${i} Name</label>
+            <input type="text" name="fieldName${i}" placeholder="Enter field name" required>
+          </div>
+          <div class="field-row">
+            <label>Data Type</label>
+            <select name="fieldType${i}">
+              <option value="CHAR(100)">Text (CHAR)</option>
+              <option value="INT">Integer (INT)</option>
+              <option value="FLOAT">Float (DECIMAL)</option>
+              <option value="DATE">Date (DATE)</option>
+            </select>
+          </div>
+        `;
+                fieldsContainer.appendChild(group);
+            }
+        });
+    </script>
+</body>
+
+</html>

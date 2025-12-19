@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Records</title>
+    <style>
+        /* 🔹 Sticky footer fix */
+        html,
+        body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            flex: 1;
+            /* Pushes footer to bottom */
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .navbar {
+            background: #4cd137;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            border-top: 3px solid #44bd32;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2f3640;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .section-description {
+            color: #636e72;
+            margin-bottom: 22px;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background: #44bd32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 15px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #4cd137;
+            transform: scale(1.02);
+        }
+
+        .btn-blue {
+            background: #40739e;
+        }
+
+        .btn-blue:hover {
+            background: #273c75;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table thead {
+            background: #44bd32;
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        table td {
+            text-align: center;
+        }
+
+        .input-field {
+            width: 95%;
+            padding: 10px 14px;
+            border: 1px solid #dcdde1;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #44bd32;
+            box-shadow: 0 0 8px rgba(68, 189, 50, 0.25);
+            background: #fff;
+        }
+
+        .input-field:hover {
+            border-color: #b8b8b8;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .db-highlight {
+            color: #44bd32;
+            font-weight: bold;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #44bd32;
+            background-color: #d4edda;
+            color: #155724;
+            text-align: center;
+        }
+
+        .alert.error {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2f3640;
+            color: #dcdde1;
+            font-size: 14px;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #4cd137;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #44bd32;
+            transform: scale(1.05);
+        }
+
+        /* Record number styling */
+        .record-number {
+            background: linear-gradient(135deg, #44bd32, #4cd137);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 2px 4px rgba(68, 189, 50, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">MySQL Manager</div>
+    </nav>
+
+    <div class="container">
+        <!-- Success message example -->
+        <div class="alert">
+            <strong>Ready to Insert:</strong> Add new records to table <span class="db-highlight">{{ table }}</span>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Insert Records into <span class="db-highlight">{{ table }}</span></div>
+            <p class="section-description">Fill in the data for each record you want to insert into the table.</p>
+
+            <form action="/insert/" method="post">
+                {% csrf_token %}
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Record #</th>
+                                {% for col in columns %}
+                                <th>{{ col }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in records %}
+                            <tr>
+                                <td><span class="record-number">{{ forloop.counter }}</span></td>
+                                {% for col in columns %}
+                                <td><input type="text" name="field_{{ i }}_{{ forloop.counter0 }}" class="input-field" placeholder="Enter {{ col }}"></td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn">Insert Records</button>
+                    <a href="/edit_table/" class="btn btn-blue">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 MySQL Manager | <a href="https://www.linkedin.com/in/aniketgavali">Aniket Gavali</a></p>
+        <p>Made with ❤️ for database enthusiasts</p>
+    </footer>
+
+</body>
+
+</html>
